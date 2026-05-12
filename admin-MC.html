@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sharon Corners Memory Care - Schedule Manager</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,system-ui,sans-serif;background:#f4f6f9;min-height:100vh;padding:20px}
+.container{max-width:680px;margin:0 auto}
+.header{background:#fff;border-radius:16px;padding:20px 24px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.header h1{font-size:20px;font-weight:700;color:#1a1a1a}
+.badge{display:inline-block;background:#eef0ff;color:#6366f1;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;margin-top:6px}
+.dl{font-size:14px;color:#888;margin-top:4px}
+.st{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#999;margin:16px 0 8px;padding:0 4px}
+.ac{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1.5px solid #eee;cursor:pointer;user-select:none}
+.ac.cancelled{background:#fff5f5;border-color:#fca5a5}
+.ac.cancelled .an{text-decoration:line-through;color:#aaa}
+.cb{width:30px;height:30px;border-radius:50%;border:2px solid #e0e0e0;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.ac.cancelled .cb{background:#ef4444;border-color:#ef4444;color:#fff}
+.ai{flex:1;min-width:0}
+.at{font-size:11px;font-weight:600;color:#999;text-transform:uppercase}
+.an{font-size:15px;font-weight:600;color:#1a1a1a;margin-top:2px}
+.al{font-size:11px;color:#bbb;margin-top:1px}
+.cx{font-size:10px;font-weight:700;color:#ef4444;text-transform:uppercase;margin-top:2px}
+.ab{background:#fff;border-radius:12px;padding:16px;margin-top:6px;border:1.5px dashed #ddd}
+.ab h3{font-size:13px;font-weight:600;color:#666;margin-bottom:10px}
+.ar{display:flex;gap:8px;margin-bottom:8px}
+input{border:1.5px solid #e0e0e0;border-radius:8px;padding:9px 12px;font-size:14px;font-family:inherit;outline:none;width:100%}
+input:focus{border-color:#6366f1}
+.addbtn{background:#6366f1;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap}
+.savebtn{width:100%;margin-top:18px;padding:15px;background:#1a1a1a;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer}
+.savebtn:disabled{background:#999;cursor:not-allowed}
+.ok{display:none;background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:12px;color:#166534;font-size:14px;font-weight:500;text-align:center;margin-top:10px}
+.err{display:none;background:#fff5f5;border:1.5px solid #fca5a5;border-radius:10px;padding:12px;color:#dc2626;font-size:14px;text-align:center;margin-top:10px}
+.resetbtn{width:100%;margin-top:8px;padding:11px;background:#fff;color:#999;border:1.5px solid #e0e0e0;border-radius:12px;font-size:13px;cursor:pointer}
+</style></head><body>
+<div class="container">
+  <div class="header">
+    <h1>Schedule Manager</h1>
+    <div class="badge">Memory Care</div>
+    <div class="dl" id="dl"></div>
+  </div>
+  <div class="st">Today's activities — tap to cancel / uncancel</div>
+  <div id="alist"></div>
+  <div class="st">Add a new activity</div>
+  <div class="ab">
+    <h3>Add a new activity</h3>
+    <div class="ar"><input type="time" id="nt" style="width:120px;flex-shrink:0"><input type="text" id="nn" placeholder="Activity name"></div>
+    <div class="ar"><input type="text" id="nl" placeholder="Location (optional)"><button class="addbtn" onclick="addAct()">+ Add</button></div>
+  </div>
+  <button class="savebtn" id="savebtn" onclick="save()">✅ Update All Displays</button>
+  <div class="ok" id="ok">✅ All screens updated! Changes appear within 30 seconds.</div>
+  <div class="err" id="err">⚠️ Could not sync. Please try again.</div>
+  <button class="resetbtn" onclick="reset()">↺ Reset to original PDF schedule</button>
+</div>
+<script>
+const WING='MC',CALENDAR={"1": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["11:15", "Brain Games", "MC"], ["11:45", "Word Rhyme", "MC"], ["1:30", "Hands & Hearts Creations", "MC"], ["2:30", "Outdoor Meditation", "MC"], ["4:00", "Fun Pong", "MC"], ["6:00", "Reading Aloud", "MC"]], "2": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Ann Marie Jewellery", ""], ["11:15", "Fit & Fabulous: Ball Work Out", "MC"], ["1:30", "Toss and Trivia", "MC"], ["2:30", "From Oven to Heart", "MC"], ["4:00", "Sports Games", "MC"], ["6:00", "Evening Reset", "MC"], ["7:00", "Docuseries", "MC"]], "3": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["11:15", "Rhythm & Motion: Chair Dance", "MC"], ["1:30", "Garden Visit", "GH"], ["2:30", "Bean Bag Toss", "MC"], ["4:00", "Fun and Focus", "MC"], ["6:00", "Tongue Twister", "MC"]], "4": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["10:45", "Memory Games with Active Living", "MC"], ["11:30", "Toss and Trivia", "MC"], ["1:30", "Creative Corner", "MC"], ["2:30", "Game On with Ashley", "MC"], ["4:00", "Pool Noodles Swing", "MC"], ["6:00", "Reading Aloud", "MC"]], "5": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Scenic Drive", "L"], ["11:15", "Morning Stretch & Breathing", "MC"], ["1:30", "Sensory Stimulation", "MC"], ["2:15", "Mental Aerobics & Smoothie Social", "MC"], ["4:00", "Air Hockey with Active Living", "MC"], ["6:00", "Tales & Togetherness", "MC"]], "6": [["9:45", "Morning Moments: Date & Weather", "MC"], ["11:15", "The Problem Solvers", "MC"], ["1:30", "Painting with Friends", "MC"], ["2:30", "Music Performance by Richard", "MC"], ["2:30", "Food Committee Meeting", "DR"], ["4:00", "Bean Bag Kick", "MC"], ["6:00", "Evening Reset", "MC"], ["7:15", "Docuseries", "MC"]], "7": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "News with Active Living", "MC"], ["10:45", "Mind & Motion with Regina", "MC"], ["11:00", "Music Therapy with Stephanie", "MC"], ["11:30", "Think Fast", "MC"], ["1:30", "Fun and Focus", "MC"], ["2:30", "Sweet Scenic Drive", "L"], ["4:00", "Balloon Volleyball", "MC"], ["6:00", "Mindful Scents", "MC"]], "8": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["11:15", "Brain Games", "MC"], ["11:45", "Word Rhyme", "MC"], ["1:30", "Hands & Hearts Creations", "MC"], ["2:30", "Pink Lady - Music & Movement", "MC"], ["4:00", "Fun Pong", "MC"], ["6:00", "Reading Aloud", "MC"]], "9": [["9:45", "Morning Moments: Date & Weather", "MC"], ["11:15", "Fit & Fabulous: Ball Work Out", "MC"], ["1:30", "Toss and Trivia", "MC"], ["2:30", "From Oven to Heart", "MC"], ["4:00", "Sports Games", "MC"], ["6:00", "Evening Reset", "MC"], ["7:00", "Docuseries", "MC"]], "10": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["11:15", "Rhythm & Motion: Chair Dance", "MC"], ["1:30", "Garden Visit", "GH"], ["2:30", "Bean Bag Toss", "MC"], ["4:00", "Fun and Focus", "MC"], ["6:00", "Tongue Twister", "MC"]], "11": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["10:45", "Memory Games with Active Living", "MC"], ["11:30", "Toss and Trivia", "MC"], ["1:30", "Creative Corner", "MC"], ["2:30", "Game On with Ashley", "MC"], ["4:00", "Pool Noodles Swing", "MC"], ["6:00", "Reading Aloud", "MC"]], "12": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Scenic Drive", "L"], ["11:15", "Morning Stretch & Breathing", "MC"], ["1:30", "Sensory Stimulation", "MC"], ["2:15", "Mental Aerobics & Smoothie Social", "MC"], ["4:00", "Air Hockey with Active Living", "MC"], ["6:00", "Tales & Togetherness", "MC"]], "13": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Yoga with Firozeh", "MC"], ["11:15", "The Problem Solvers", "MC"], ["1:30", "Painting with Friends", "MC"], ["2:30", "Sing-Along with Frank", "MC"], ["4:00", "Bean Bag Kick", "MC"], ["6:00", "Evening Reset", "MC"], ["7:15", "Docuseries", "MC"]], "14": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "News with Active Living", "MC"], ["10:45", "Mind & Motion with Regina", "MC"], ["11:30", "Think Fast", "MC"], ["1:30", "Fun and Focus", "MC"], ["2:30", "Sweet Scenic Drive", "L"], ["4:00", "Balloon Volleyball", "MC"], ["6:00", "Mindful Scents", "MC"]], "15": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["11:15", "Brain Games", "MC"], ["11:45", "Word Rhyme", "MC"], ["1:30", "Hands & Hearts Creations", "MC"], ["2:30", "Pink Lady - Music & Movement", "MC"], ["4:00", "Fun Pong", "MC"], ["6:00", "Reading Aloud", "MC"]], "16": [["9:45", "Morning Moments: Date & Weather", "MC"], ["11:15", "Fit & Fabulous: Ball Work Out", "MC"], ["1:30", "Toss and Trivia", "MC"], ["2:30", "From Oven to Heart", "MC"], ["4:00", "Sports Games", "MC"], ["6:00", "Evening Reset", "MC"], ["7:00", "Docuseries", "MC"]], "17": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["11:15", "Rhythm & Motion: Chair Dance", "MC"], ["1:30", "Garden Visit", "GH"], ["2:30", "Bean Bag Toss", "MC"], ["4:00", "Fun and Focus", "MC"], ["6:00", "Tongue Twister", "MC"]], "18": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["10:45", "Memory Games with Active Living", "MC"], ["11:30", "Toss and Trivia", "MC"], ["1:30", "Creative Corner", "MC"], ["2:30", "Game On with Ashley", "MC"], ["4:00", "Pool Noodles Swing", "MC"], ["6:00", "Reading Aloud", "MC"]], "19": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Scenic Drive", "L"], ["11:15", "Morning Stretch & Breathing", "MC"], ["1:30", "Sensory Stimulation", "MC"], ["2:15", "Mental Aerobics & Smoothie Social", "MC"], ["4:00", "Air Hockey with Active Living", "MC"], ["6:00", "Tales & Togetherness", "MC"]], "20": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Yoga with Firozeh", "MC"], ["11:15", "The Problem Solvers", "MC"], ["1:30", "Painting with Friends", "MC"], ["2:30", "Pink Lady - Music & Movement", "MC"], ["4:00", "Bean Bag Kick", "MC"], ["6:00", "Evening Reset", "MC"], ["7:15", "Docuseries", "MC"]], "21": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "News with Active Living", "MC"], ["10:45", "Mind & Motion with Regina", "MC"], ["11:00", "Music Therapy with Stephanie", "MC"], ["11:30", "Think Fast", "MC"], ["1:30", "Fun and Focus", "MC"], ["2:30", "Sweet Scenic Drive", "L"], ["4:00", "Balloon Volleyball", "MC"], ["6:00", "Mindful Scents", "MC"]], "22": [["9:30", "Voices of Joy: Choir Performance", "DR"], ["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["11:15", "Brain Games", "MC"], ["11:45", "Word Rhyme", "MC"], ["1:30", "Hands & Hearts Creations", "MC"], ["2:30", "Outdoor Meditation", "MC"], ["4:00", "Fun Pong", "MC"], ["6:00", "Reading Aloud", "MC"]], "23": [["9:45", "Morning Moments: Date & Weather", "MC"], ["11:15", "Fit & Fabulous: Ball Work Out", "MC"], ["1:30", "Toss and Trivia", "MC"], ["2:30", "From Oven to Heart", "MC"], ["4:00", "Sports Games", "MC"], ["6:00", "Evening Reset", "MC"], ["7:00", "Docuseries", "MC"]], "24": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["11:15", "Rhythm & Motion: Chair Dance", "MC"], ["1:30", "Garden Visit", "GH"], ["2:30", "Bean Bag Toss", "MC"], ["4:00", "Fun and Focus", "MC"], ["6:00", "Tongue Twister", "MC"]], "25": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["10:45", "Memory Games with Active Living", "MC"], ["11:30", "Toss and Trivia", "MC"], ["1:30", "Creative Corner", "MC"], ["2:30", "Game On with Ashley", "MC"], ["4:00", "Pool Noodles Swing", "MC"], ["6:00", "Reading Aloud", "MC"]], "26": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Scenic Drive", "L"], ["11:15", "Morning Stretch & Breathing", "MC"], ["1:30", "Sensory Stimulation", "MC"], ["2:15", "Mental Aerobics & Smoothie Social", "MC"], ["2:30", "Town Hall Meeting", "DR"], ["4:00", "Air Hockey with Active Living", "MC"], ["6:00", "Tales & Togetherness", "MC"]], "27": [["9:45", "Morning Moments: Date & Weather", "MC"], ["11:15", "The Problem Solvers", "MC"], ["1:30", "Painting with Friends", "MC"], ["2:30", "Pink Lady - Music & Movement", "MC"], ["4:00", "Bean Bag Kick", "MC"], ["6:00", "Evening Reset", "MC"], ["7:15", "Docuseries", "MC"]], "28": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "News with Active Living", "MC"], ["10:45", "Mind & Motion with Regina", "MC"], ["11:30", "Think Fast", "MC"], ["1:30", "Fun and Focus", "MC"], ["2:30", "Sweet Scenic Drive", "L"], ["3:00", "Back to the 70's", "TH"], ["4:00", "Balloon Volleyball", "MC"], ["6:00", "Mindful Scents", "MC"]], "29": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Chair Fitness with Active Living", "MC"], ["11:15", "Brain Games", "MC"], ["11:45", "Word Rhyme", "MC"], ["1:30", "Hands & Hearts Creations", "MC"], ["2:30", "Sing-Along with Frank", "MC"], ["4:00", "Fun Pong", "MC"], ["6:00", "Reading Aloud", "MC"]], "30": [["9:45", "Morning Moments: Date & Weather", "MC"], ["11:15", "Fit & Fabulous: Ball Work Out", "MC"], ["1:30", "Toss and Trivia", "MC"], ["2:30", "From Oven to Heart", "MC"], ["4:00", "Sports Games", "MC"], ["6:00", "Evening Reset", "MC"], ["7:00", "Docuseries", "MC"]], "31": [["9:45", "Morning Moments: Date & Weather", "MC"], ["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["11:15", "Rhythm & Motion: Chair Dance", "MC"], ["1:30", "Garden Visit", "GH"], ["2:30", "Bean Bag Toss", "MC"], ["4:00", "Fun and Focus", "MC"], ["6:00", "Tongue Twister", "MC"]]};
+
+const GH_TOKEN = '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';
+const GH_REPO = '109Solutions/signage';
+const GH_FILE = 'schedule-data.json';
+const GH_API = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE;
+
+function parseMins(t) {
+  const m=t.match(/(\d{1,2}):(\d{2})/);if(!m)return -1;
+  let h=parseInt(m[1]),min=parseInt(m[2]);if(h<8)h+=12;return h*60+min;
+}
+function fmtTime(t) {
+  const m=t.match(/(\d{1,2}):(\d{2})/);if(!m)return t;
+  let h=parseInt(m[1]),min=m[2];if(h<8)h+=12;
+  return (h%12||12)+':'+min+' '+(h>=12?'PM':'AM');
+}
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+
+function ghHeaders() {
+  return {
+    'Authorization': 'token ' + GH_TOKEN,
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+}
+
+async function dbGet(wing) {
+  try {
+    const r = await fetch(GH_API, { headers: ghHeaders() });
+    if (!r.ok) throw new Error('GET failed: ' + r.status);
+    const d = await r.json();
+    const data = JSON.parse(atob(d.content));
+    const key = wing + '_' + todayStr();
+    if (data[key]) return data[key];
+  } catch(e) { console.log('dbGet error:', e); }
+  return null;
+}
+
+async function dbSet(wing, activities) {
+  // Get current file
+  const r1 = await fetch(GH_API, { headers: ghHeaders() });
+  if (!r1.ok) throw new Error('Read failed: ' + r1.status);
+  const fileData = await r1.json();
+  const sha = fileData.sha;
+  const current = JSON.parse(atob(fileData.content));
+  
+  // Update
+  const key = wing + '_' + todayStr();
+  current[key] = activities;
+  
+  // Write back
+  const r2 = await fetch(GH_API, {
+    method: 'PUT',
+    headers: ghHeaders(),
+    body: JSON.stringify({
+      message: 'Update schedule for ' + wing + ' ' + todayStr(),
+      content: btoa(JSON.stringify(current)),
+      sha: sha
+    })
+  });
+  if (!r2.ok) {
+    const t = await r2.text();
+    throw new Error('Write failed: ' + r2.status + ' ' + t);
+  }
+}
+
+function wmoIcon(c){if(c===0)return'☀️';if(c<=2)return'⛅';if(c===3)return'☁️';if(c<=49)return'🌫️';if(c<=67)return'🌧️';if(c<=77)return'❄️';return'⛈️';}
+function wmoText(c){if(c===0)return'Clear Sky';if(c<=2)return'Partly Cloudy';if(c===3)return'Overcast';if(c<=67)return'Rain';if(c<=77)return'Snow';return'Storm';}
+
+const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const now=new Date();
+document.getElementById('dl').textContent=days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+let activities=[];
+function init(){
+  const month=now.getMonth()+1,day=now.getDate();
+  const base=(month===5&&CALENDAR[day])?CALENDAR[day]:[];
+  activities=base.map(ev=>(({time:ev[0],name:ev[1],loc:ev[2]||'',cancelled:false})));
+  activities.sort((a,b)=>parseMins(a.time)-parseMins(b.time));
+}
+function render(){
+  const list=document.getElementById('alist');
+  if(!activities.length){list.innerHTML='<p style="color:#bbb;text-align:center;padding:20px">No activities for today.</p>';return;}
+  list.innerHTML=activities.map((ev,i)=>`
+    <div class="ac${ev.cancelled?' cancelled':''}" onclick="tog(${i})">
+      <div class="cb">${ev.cancelled?'✕':'✓'}</div>
+      <div class="ai">
+        <div class="at">${fmtTime(ev.time)}</div>
+        <div class="an">${ev.name}</div>
+        ${ev.loc?`<div class="al">📍 ${ev.loc}</div>`:''}
+        ${ev.cancelled?'<div class="cx">Cancelled</div>':''}
+      </div>
+    </div>`).join('');
+}
+function tog(i){activities[i].cancelled=!activities[i].cancelled;render();}
+function addAct(){
+  const t=document.getElementById('nt').value;
+  const n=document.getElementById('nn').value.trim();
+  const l=document.getElementById('nl').value.trim();
+  if(!t||!n){alert('Please enter a time and name.');return;}
+  const h=parseInt(t.split(':')[0]),m=t.split(':')[1];
+  activities.push({time:(h%12||12)+':'+m+' '+(h>=12?'PM':'AM'),name:n,loc:l,cancelled:false});
+  activities.sort((a,b)=>parseMins(a.time)-parseMins(b.time));
+  document.getElementById('nt').value='';document.getElementById('nn').value='';document.getElementById('nl').value='';
+  render();
+}
+async function save(){
+  const btn=document.getElementById('savebtn');
+  btn.disabled=true;btn.textContent='⏳ Syncing...';
+  document.getElementById('ok').style.display='none';
+  document.getElementById('err').style.display='none';
+  try{
+    await dbSet(WING,activities);
+    document.getElementById('ok').style.display='block';
+    setTimeout(()=>document.getElementById('ok').style.display='none',5000);
+  }catch(e){
+    console.log('Save error:',e.message);
+    const errEl=document.getElementById('err');
+    errEl.style.display='block';
+    errEl.textContent='⚠️ '+e.message;
+  }
+  btn.disabled=false;btn.textContent='✅ Update All Displays';
+}
+async function loadExisting(){
+  const saved=await dbGet(WING);
+  if(saved){activities=saved;}else{init();}
+  render();
+}
+function reset(){if(!confirm('Reset to original PDF schedule?'))return;init();render();}
+loadExisting();
+</script></body></html>
