@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today's Activities</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0f1117;
+    color: #ffffff;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 48px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+  }
+
+  .header-left h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .header-left .subtitle {
+    font-size: 18px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 6px;
+    font-weight: 400;
+  }
+
+  .header-right { text-align: right; }
+
+  .clock {
+    font-size: 52px;
+    font-weight: 300;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .date-display {
+    font-size: 18px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 6px;
+    text-align: right;
+  }
+
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 48px 24px;
+    overflow: hidden;
+  }
+
+  .status-bar {
+    font-size: 14px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+  }
+
+  .status-dot.error { background: #ef4444; }
+
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    overflow-y: auto;
+    flex: 1;
+    align-content: start;
+    padding-right: 4px;
+  }
+
+  .events-grid::-webkit-scrollbar { width: 4px; }
+  .events-grid::-webkit-scrollbar-track { background: transparent; }
+  .events-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+  .event-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .event-card.current {
+    background: rgba(99, 102, 241, 0.18);
+    border-color: rgba(99, 102, 241, 0.5);
+  }
+
+  .event-card.past { opacity: 0.45; }
+
+  .event-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 14px 0 0 14px;
+  }
+
+  .event-card.cat-fitness::before { background: #22c55e; }
+  .event-card.cat-social::before { background: #a78bfa; }
+  .event-card.cat-arts::before { background: #f472b6; }
+  .event-card.cat-cognitive::before { background: #60a5fa; }
+  .event-card.cat-spiritual::before { background: #fbbf24; }
+  .event-card.cat-other::before { background: #94a3b8; }
+  .event-card.current::before { background: #818cf8; }
+
+  .event-time {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .event-card.current .event-time { color: #a5b4fc; }
+
+  .event-name {
+    font-size: 19px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+
+  .event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+
+  .event-pill {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.55);
+  }
+
+  .now-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: #818cf8;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    align-self: flex-start;
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 80px auto;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .center-msg {
+    font-size: 22px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.25);
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  footer {
+    padding: 14px 48px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .footer-left { font-size: 13px; color: rgba(255,255,255,0.2); }
+  .next-refresh { font-size: 13px; color: rgba(255,255,255,0.2); }
+
+  .section-label {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 4px;
+    margin-top: 8px;
+    grid-column: 1 / -1;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Today's Activities</h1>
+    <div class="subtitle" id="community-name">Loading schedule...</div>
+  </div>
+  <div class="header-right">
+    <div class="clock" id="clock">--:--</div>
+    <div class="date-display" id="date-display"></div>
+  </div>
+</header>
+
+<div class="main" id="main-content">
+  <div class="spinner"></div>
+</div>
+
+<footer>
+  <div class="footer-left">Powered by Welbi</div>
+  <div class="next-refresh" id="next-refresh"></div>
+</footer>
+
+<script>
+const ANTHROPIC_API_KEY = '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';
+const WELBI_URL = 'https://public.welbi.com/ca/c82cfe13-ad1a-4d8a-9500-537a05c6522f';
+const REFRESH_MS = 30 * 60 * 1000;
+let nextRefreshAt = null;
+
+function formatTime(d) {
+  let h = d.getHours(), m = d.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${m.toString().padStart(2,'0')} ${ampm}`;
+}
+
+function updateClock() {
+  const now = new Date();
+  let h = now.getHours(), m = now.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hh = h % 12 || 12;
+  document.getElementById('clock').textContent = `${hh}:${m.toString().padStart(2,'0')} ${ampm}`;
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('date-display').textContent =
+    `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+}
+
+function updateCountdown() {
+  if (!nextRefreshAt) return;
+  const secs = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+  const m = Math.floor(secs / 60), s = secs % 60;
+  document.getElementById('next-refresh').textContent = `Refreshes in ${m}:${s.toString().padStart(2,'0')}`;
+}
+
+function categoryClass(str) {
+  if (!str) return 'cat-other';
+  const c = str.toLowerCase();
+  if (c.includes('fit') || c.includes('exercise') || c.includes('walk') || c.includes('yoga') || c.includes('sport')) return 'cat-fitness';
+  if (c.includes('social') || c.includes('bingo') || c.includes('game') || c.includes('music') || c.includes('party')) return 'cat-social';
+  if (c.includes('art') || c.includes('craft') || c.includes('paint') || c.includes('creat')) return 'cat-arts';
+  if (c.includes('cogn') || c.includes('trivia') || c.includes('book') || c.includes('learn') || c.includes('lecture')) return 'cat-cognitive';
+  if (c.includes('spirit') || c.includes('prayer') || c.includes('chapel') || c.includes('church') || c.includes('faith')) return 'cat-spiritual';
+  return 'cat-other';
+}
+
+function parseTimeToMinutes(t) {
+  if (!t) return -1;
+  const m = t.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+  if (!m) return -1;
+  let h = parseInt(m[1]), min = parseInt(m[2]);
+  const ap = (m[3] || '').toUpperCase();
+  if (ap === 'PM' && h !== 12) h += 12;
+  if (ap === 'AM' && h === 12) h = 0;
+  return h * 60 + min;
+}
+
+function renderEvents(events) {
+  const main = document.getElementById('main-content');
+  if (!events || events.length === 0) {
+    main.innerHTML = `<div class="center-msg">No activities scheduled for today.<br>Check back tomorrow!</div>`;
+    return;
+  }
+  const now = new Date();
+  const nowMins = now.getHours() * 60 + now.getMinutes();
+  events.sort((a, b) => parseTimeToMinutes(a.time) - parseTimeToMinutes(b.time));
+
+  let html = `<div class="status-bar"><div class="status-dot"></div><span>Live · Last updated ${formatTime(now)}</span></div>`;
+  html += '<div class="events-grid">';
+  let shownUpcoming = false;
+
+  events.forEach(ev => {
+    const startMins = parseTimeToMinutes(ev.time);
+    const endMins = ev.endTime ? parseTimeToMinutes(ev.endTime) : startMins + 60;
+    const isPast = endMins > 0 && endMins < nowMins;
+    const isCurrent = startMins <= nowMins && endMins >= nowMins;
+    const isUpcoming = startMins > nowMins;
+    if (isUpcoming && !shownUpcoming) {
+      html += `<div class="section-label">Upcoming</div>`;
+      shownUpcoming = true;
+    }
+    const catClass = categoryClass(ev.category || ev.name);
+    html += `<div class="event-card ${catClass} ${isCurrent ? 'current' : ''} ${isPast ? 'past' : ''}">`;
+    if (isCurrent) html += `<div class="now-badge">Now</div>`;
+    html += `<div class="event-time">${ev.time || ''}${ev.endTime ? ' – ' + ev.endTime : ''}</div>`;
+    html += `<div class="event-name">${ev.name}</div>`;
+    html += `<div class="event-meta">`;
+    if (ev.location) html += `<span class="event-pill">📍 ${ev.location}</span>`;
+    if (ev.facilitator) html += `<span class="event-pill">👤 ${ev.facilitator}</span>`;
+    if (ev.category) html += `<span class="event-pill">${ev.category}</span>`;
+    html += `</div></div>`;
+  });
+
+  html += '</div>';
+  main.innerHTML = html;
+}
+
+function renderError() {
+  document.getElementById('main-content').innerHTML =
+    `<div class="status-bar"><div class="status-dot error"></div><span>Could not load schedule</span></div>
+     <div class="center-msg">Unable to load today's activities.<br>Will retry in 30 minutes.</div>`;
+}
+
+async function fetchAndDisplay() {
+  document.getElementById('community-name').textContent = "Fetching today's schedule...";
+  document.getElementById('main-content').innerHTML = '<div class="spinner"></div>';
+
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('en-CA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{
+          role: 'user',
+          content: `Visit this Welbi public calendar URL and extract ALL activities scheduled for TODAY (${dateStr}).
+
+URL: ${WELBI_URL}
+
+Return ONLY valid JSON, no markdown, no explanation:
+{"communityName":"Community name or null","events":[{"name":"Activity name","time":"10:00 AM","endTime":"11:00 AM or null","location":"Room or null","facilitator":"Staff name or null","category":"Fitness or Social or Arts or Cognitive or Spiritual or null"}]}
+
+If no events: {"communityName":null,"events":[]}
+If cannot access: {"error":"Cannot access"}`
+        }]
+      })
+    });
+
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    const textBlock = data.content?.find(b => b.type === 'text');
+    if (!textBlock) throw new Error('No response');
+
+    let raw = textBlock.text.trim().replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(raw);
+    if (parsed.error) throw new Error(parsed.error);
+
+    document.getElementById('community-name').textContent = parsed.communityName || 'Activity Schedule';
+    renderEvents(parsed.events);
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById('community-name').textContent = 'Activity Schedule';
+    renderError();
+  }
+
+  nextRefreshAt = Date.now() + REFRESH_MS;
+}
+
+updateClock();
+setInterval(updateClock, 10000);
+setInterval(updateCountdown, 1000);
+fetchAndDisplay();
+setInterval(fetchAndDisplay, REFRESH_MS);
+
+const midnight = new Date();
+midnight.setHours(24, 0, 30, 0);
+setTimeout(fetchAndDisplay, midnight - new Date());
+</script>
+</body>
+</html>
