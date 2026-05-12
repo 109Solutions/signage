@@ -14,38 +14,27 @@
   .header-title h2 { font-size: 24px; font-weight: 700; color: #1a1a1a; }
   .header-title p { font-size: 14px; color: #999; margin-top: 3px; }
   .weather-widget { display: flex; align-items: center; gap: 14px; background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 12px; padding: 10px 18px; flex-shrink: 0; }
-  .w-icon { font-size: 36px; }
-  .w-info { display: flex; flex-direction: column; gap: 1px; }
-  .w-temp { font-size: 28px; font-weight: 300; color: #1a1a1a; line-height: 1; }
-  .w-cond { font-size: 12px; color: #666; }
-  .w-loc { font-size: 11px; color: #999; }
+  .w-icon { font-size: 36px; } .w-info { display: flex; flex-direction: column; gap: 1px; }
+  .w-temp { font-size: 28px; font-weight: 300; color: #1a1a1a; line-height: 1; } .w-cond { font-size: 12px; color: #666; } .w-loc { font-size: 11px; color: #999; }
   .w-forecast { display: flex; gap: 12px; padding-left: 14px; border-left: 1px solid #ddd; }
-  .fc { display: flex; flex-direction: column; align-items: center; gap: 2px; }
-  .fc-name { font-size: 10px; color: #999; text-transform: uppercase; }
-  .fc-icon { font-size: 15px; }
-  .fc-hi { font-size: 12px; color: #555; font-weight: 500; }
+  .fc { display: flex; flex-direction: column; align-items: center; gap: 2px; } .fc-name { font-size: 10px; color: #999; text-transform: uppercase; } .fc-icon { font-size: 15px; } .fc-hi { font-size: 12px; color: #555; font-weight: 500; }
   .header-right { text-align: right; flex-shrink: 0; }
-  .clock { font-size: 52px; font-weight: 200; color: #1a1a1a; letter-spacing: -2px; line-height: 1; }
-  .date-d { font-size: 14px; color: #888; margin-top: 4px; }
+  .clock { font-size: 52px; font-weight: 200; color: #1a1a1a; letter-spacing: -2px; line-height: 1; } .date-d { font-size: 14px; color: #888; margin-top: 4px; }
   .main { padding: 16px 60px; overflow: hidden; display: flex; flex-direction: column; background: #f5f5f5; }
   .sbar { font-size: 13px; color: #999; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
   .sdot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
   .egrid { display: grid; gap: 12px; flex: 1; align-content: start; overflow: hidden; }
   .ecard { background: #fff; border: 1px solid #e5e5e5; border-radius: 14px; padding: 14px 18px; display: flex; flex-direction: column; gap: 5px; position: relative; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-  .ecard.now { background: #eef0ff; border-color: #a5b4fc; }
-  .ecard.past { opacity: 0.35; }
-  .ecard::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 14px 0 0 14px; background: #cbd5e1; }
-  .ecard.now::before { background: #6366f1; }
+  .ecard.now { background: #eef0ff; border-color: #a5b4fc; } .ecard.past { opacity: 0.35; }
+  .ecard::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 14px 0 0 14px; background: #cbd5e1; } .ecard.now::before { background: #6366f1; }
   .nbadge { font-size: 10px; font-weight: 700; background: #6366f1; color: #fff; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; align-self: flex-start; }
-  .etime { font-size: 12px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
-  .ecard.now .etime { color: #6366f1; }
+  .etime { font-size: 12px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; } .ecard.now .etime { color: #6366f1; }
   .ename { font-size: 17px; font-weight: 600; color: #1a1a1a; line-height: 1.2; }
   .eloc { font-size: 11px; padding: 2px 8px; border-radius: 20px; background: #f0f0f0; color: #777; font-weight: 500; align-self: flex-start; }
   .slabel { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #bbb; grid-column: 1 / -1; }
   .cmsg { font-size: 24px; font-weight: 300; color: #bbb; text-align: center; margin-top: 80px; line-height: 2; }
   footer { padding: 0 60px; border-top: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: #fff; }
-  .fl { font-size: 12px; color: #bbb; }
-  .fr { font-size: 12px; color: #bbb; }
+  .fl { font-size: 12px; color: #bbb; } .fr { font-size: 12px; color: #bbb; }
 </style>
 </head>
 <body>
@@ -55,17 +44,10 @@
     <div class="header-title"><h2>Today's Activities</h2><p>Independent Living</p></div>
     <div class="weather-widget">
       <div class="w-icon" id="wi">🌡️</div>
-      <div class="w-info">
-        <div class="w-temp" id="wt">--°C</div>
-        <div class="w-cond" id="wc">Loading...</div>
-        <div class="w-loc">East Gwillimbury, ON</div>
-      </div>
+      <div class="w-info"><div class="w-temp" id="wt">--°C</div><div class="w-cond" id="wc">Loading...</div><div class="w-loc">East Gwillimbury, ON</div></div>
       <div class="w-forecast" id="wf"></div>
     </div>
-    <div class="header-right">
-      <div class="clock" id="clock">--:--</div>
-      <div class="date-d" id="dated"></div>
-    </div>
+    <div class="header-right"><div class="clock" id="clock">--:--</div><div class="date-d" id="dated"></div></div>
   </header>
   <div class="main" id="main"></div>
   <footer>
@@ -77,8 +59,8 @@
 const WING = 'IL';
 const CALENDAR = {"1": [["9:15", "Gentleman's Pace with Carlo", "L"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["2:00", "Euchre & Bridge", "GR"], ["2:30", "Baking with Alia", "CK"], ["2:30", "Walmart: Aurora", "L"], ["3:30", "The Men's Corner with Active Living", "GR"], ["7:00", "Movie Matinee", "TH"]], "2": [["9:30", "Walking Club", "L"], ["10:00", "Seated Exercise with Active Living", "GYM"], ["10:00", "Ann Marie Jewellery", ""], ["10:45", "Smoothie & News with Active Living", "CK"], ["11:00", "Activity Booklet", "L"], ["2:30", "10 Cent Bingo", "TH"], ["3:30", "Trivia with Active Living", "CK"], ["7:00", "The Puzzle Club", "GR"]], "3": [["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["10:45", "Coffee & Trivia", "BP"], ["12:45", "Blue Jays Game", "TH"], ["3:30", "Sunday Reset: 15 Min Stretch", "GYM"], ["7:00", "Residents Run Table Games", "GR"]], "4": [["9:30", "Upper Canada Mall", "L"], ["9:45", "Gentlemen in Motion with Aidan", "GYM"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["11:00", "This Day in History", "CK"], ["2:00", "Euchre & Bridge", "GR"], ["2:30", "Baking with Maura", "CK"], ["3:30", "Trivia with Active Living", "CK"], ["7:00", "The Puzzle Club", "GR"]], "5": [["9:15", "Gentleman's Pace with Carlo", "L"], ["9:45", "Active Living Fitness Boost", "GYM"], ["10:30", "Spring Card Art with Ann", "AS"], ["2:30", "Games with Active Living", "CK"], ["3:30", "Tai Chi Flow Online", "GYM"], ["7:00", "Ladies Billiard Club", "GR"]], "6": [["10:00", "Chair Yoga with Patricia", "GYM"], ["11:00", "Mindful Sips After Yoga", "CK"], ["11:00", "Gentlemen in Motion with Hussain", "GYM"], ["2:30", "10 Cent Bingo", "CK"], ["2:30", "Food Committee Meeting", "DR"], ["3:30", "Learning Canva with Hussain", "TH"], ["7:00", "Docuseries", "TH"]], "7": [["10:00", "Fitness Strength with Regina", "GYM"], ["10:00", "United Church Service & Communion", "TH"], ["10:45", "Gentlemen in Motion with Hussain", "GYM"], ["11:00", "Word Games with Active Living", "CK"], ["2:30", "Gentlemen Model Train Building", "AS"], ["3:00", "Happy Hour", "BP"], ["7:00", "Ladies Billiard Club", "GR"]], "8": [["9:15", "Gentleman's Pace with Carlo", "L"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["2:00", "Euchre & Bridge", "GR"], ["2:00", "Gateway Casinos Innisfil", "L"], ["2:30", "Music Performance by Kent Mill", "BP"], ["3:30", "The Men's Corner with Active Living", "GR"], ["7:00", "Movie Matinee", "TH"]], "9": [["9:30", "Walking Club", "L"], ["10:00", "Seated Exercise with Active Living", "GYM"], ["10:45", "Smoothie & News with Active Living", "CK"], ["11:00", "Activity Booklet", "L"], ["2:30", "10 Cent Bingo", "TH"], ["3:30", "Trivia with Active Living", "CK"], ["7:00", "The Puzzle Club", "GR"]], "10": [["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["10:45", "Coffee & Trivia", "BP"], ["2:30", "Movie Matinee & Popcorn", "TH"], ["3:30", "Sunday Reset: 15 Min Stretch", "GYM"], ["7:00", "Residents Run Table Games", "GR"]], "11": [["9:45", "Gentlemen in Motion with Aidan", "GYM"], ["9:45", "Winners & Homesense: Aurora", "L"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["10:30", "Arts & Craft with Lisa", "AS"], ["11:00", "This Day in History", "CK"], ["2:30", "25 Cent Card Game", "GR"], ["3:30", "Trivia with Active Living", "CK"], ["7:00", "The Puzzle Club", "GR"]], "12": [["9:15", "Gentleman's Pace with Carlo", "L"], ["9:45", "Active Living Fitness Boost", "GYM"], ["2:30", "Games with Active Living", "CK"], ["2:30", "Ballroom Dancing with Derek", "GYM"], ["3:30", "Tai Chi Flow Online", "GYM"], ["7:00", "Ladies Billiard Club", "GR"]], "13": [["10:00", "Green Flow Yoga with Patricia", "GYM"], ["11:00", "Mindful Sips After Yoga", "CK"], ["11:00", "Gentlemen in Motion with Hussain", "GYM"], ["2:30", "10 Cent Bingo", "CK"], ["3:30", "Learning Canva with Hussain", "TH"], ["7:00", "Docuseries", "TH"]], "14": [["10:00", "Fitness Strength with Regina", "GYM"], ["10:30", "Art with Carmen", "AS"], ["10:45", "Gentlemen in Motion with Hussain", "GYM"], ["11:00", "Word Games with Active Living", "CK"], ["2:30", "Gentlemen Model Train Building", "AS"], ["3:00", "Happy Hour", "BP"], ["7:00", "Ladies Billiard Club", "GR"]], "15": [["9:15", "Gentleman's Pace with Carlo", "L"], ["9:45", "Plaza 404", "L"], ["10:00", "Garden Club with Becca", "P"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["2:00", "Euchre & Bridge", "GR"], ["2:30", "Music Performance with Fex & LeBlanc", "BP"], ["3:30", "The Men's Corner with Active Living", "GR"], ["3:30", "Baking with Luisa", "CK"], ["7:00", "Movie Matinee", "TH"]], "16": [["9:30", "Walking Club", "L"], ["10:00", "Seated Exercise with Active Living", "GYM"], ["10:45", "Smoothie & News with Active Living", "CK"], ["11:00", "Activity Booklet", "L"], ["2:30", "10 Cent Bingo", "TH"], ["3:30", "Trivia with Active Living", "CK"], ["7:00", "The Puzzle Club", "GR"]], "17": [["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["10:45", "Coffee & Trivia", "BP"], ["2:30", "National Classic Movie Day", "TH"], ["3:30", "Sunday Reset: 15 Min Stretch", "GYM"], ["7:00", "Residents Run Table Games", "GR"]], "18": [["9:45", "Gentlemen in Motion with Aidan", "GYM"], ["9:45", "Shoppers Drug Mart/Banks", "L"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["11:00", "This Day in History", "CK"], ["2:00", "Euchre & Bridge", "GR"], ["3:30", "Trivia with Active Living", "CK"], ["6:00", "Dinner at Beer Town", "L"], ["7:00", "The Puzzle Club", "GR"]], "19": [["9:15", "Gentleman's Pace with Carlo", "L"], ["9:45", "Active Living Fitness Boost", "GYM"], ["10:30", "Art with Carmen", "AS"], ["2:30", "Games with Active Living", "CK"], ["2:30", "Hula Hoop Dance with Linda", "BP"], ["3:30", "Tai Chi Flow Online", "GYM"], ["7:00", "Ladies Billiard Club", "GR"]], "20": [["10:00", "Chair Yoga with Patricia", "GYM"], ["11:00", "Mindful Sips After Yoga", "CK"], ["11:00", "Gentlemen in Motion with Hussain", "GYM"], ["2:30", "Residents Council Meeting", "TH"], ["3:30", "10 Cent Bingo", "CK"], ["7:00", "Docuseries", "TH"]], "21": [["10:00", "Fitness Strength with Regina", "GYM"], ["10:30", "Art with Carmen", "AS"], ["10:45", "Gentlemen in Motion with Hussain", "GYM"], ["11:00", "Word Games with Active Living", "CK"], ["2:00", "East Gwillimbury Farmer's Market", "BP"], ["2:30", "Gentlemen Model Train Building", "AS"], ["3:00", "Happy Hour", "BP"], ["7:00", "Ladies Billiard Club", "GR"]], "22": [["9:15", "Gentleman's Pace with Carlo", "L"], ["9:30", "Voices of Joy: Choir Performance", "DR"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["2:00", "Euchre & Bridge", "GR"], ["2:00", "Longos Plaza", "L"], ["2:30", "Live Music with Carl", "BP"], ["3:30", "Fear Factor with Adrian", "CK"], ["7:00", "Movie Matinee", "TH"]], "23": [["9:30", "Walking Club", "L"], ["10:00", "Seated Exercise with Active Living", "GYM"], ["10:45", "Smoothie & News with Active Living", "CK"], ["11:00", "Activity Booklet", "L"], ["2:30", "10 Cent Bingo", "TH"], ["3:30", "Trivia with Active Living", "CK"], ["7:00", "The Puzzle Club", "GR"]], "24": [["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["10:45", "Coffee & Trivia", "BP"], ["2:30", "Movie Matinee & Popcorn", "TH"], ["3:30", "Sunday Reset: 15 Min Stretch", "GYM"], ["7:00", "Residents Run Table Games", "GR"]], "25": [["9:45", "Gentlemen in Motion with Aidan", "GYM"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["10:30", "The Japanese Geisha by Lianne Harris", "TH"], ["11:00", "This Day in History", "CK"], ["2:30", "25 Cent Card Game", "GR"], ["2:30", "Lake Wilcox Walk", "L"], ["3:30", "Trivia with Active Living", "CK"], ["7:00", "The Puzzle Club", "GR"]], "26": [["9:15", "Gentleman's Pace with Carlo", "L"], ["9:45", "Active Living Fitness Boost", "GYM"], ["10:30", "Art with Carmen", "AS"], ["2:30", "Town Hall Meeting", "DR"], ["3:30", "Tai Chi Flow Online", "GYM"], ["7:00", "Ladies Billiard Club", "GR"]], "27": [["10:00", "Chair Yoga with Patricia", "GYM"], ["11:00", "Mindful Sips After Yoga", "CK"], ["11:00", "Gentlemen in Motion with Hussain", "GYM"], ["2:30", "Cooking Demo with Jordan", "CK"], ["3:30", "Learning Canva with Hussain", "TH"], ["3:30", "10 Cent Bingo", "CK"], ["7:00", "Docuseries", "TH"]], "28": [["10:00", "Fitness Strength with Regina", "GYM"], ["10:45", "Gentlemen in Motion with Hussain", "GYM"], ["11:00", "Word Games with Active Living", "CK"], ["3:00", "Happy Hour", "BP"], ["3:00", "Back to the 70's", "TH"], ["7:00", "Ladies Billiard Club", "GR"]], "29": [["9:15", "Gentleman's Pace with Carlo", "L"], ["9:45", "Tanger Outlets Cookstown", "L"], ["10:15", "Sit, Stand & Stay Active", "GYM"], ["2:00", "Euchre & Bridge", "GR"], ["2:30", "Music, Cake & Birthday Cheer", "BP"], ["3:30", "Men's Billiards Tournament", "GR"], ["7:00", "Movie Matinee", "TH"]], "30": [["9:30", "Walking Club", "L"], ["10:00", "Seated Exercise with Active Living", "GYM"], ["10:45", "Smoothie & News with Active Living", "CK"], ["11:00", "Activity Booklet", "L"], ["2:30", "10 Cent Bingo", "TH"], ["3:30", "Trivia with Active Living", "CK"], ["7:00", "The Puzzle Club", "GR"]], "31": [["10:00", "Sunday Worship - Hope United Church (Virtual)", "TH"], ["10:45", "Coffee & Trivia", "BP"], ["2:30", "Movie Matinee & Popcorn", "TH"], ["3:30", "Sunday Reset: 15 Min Stretch", "GYM"], ["7:00", "Residents Run Table Games", "GR"]]};
 
-const SUPABASE_URL = 'https://yleblfmurrwwztnmxnz.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_HfyzBAvCI_3xC6XjdDZsJw_BhKdBVc3';
+const SUPABASE_URL = 'https://yleblfmurrwwztznmxnz.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZWJsZm11cnJ3d3p0em5teG56Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NTAyMjcsImV4cCI6MjA5NDEyNjIyN30.Bv4ATdNb_e8aAkBtJu78yMwqZBTogFjejemnDvFLVNI';
 
 function parseMins(t) {
   const m = t.match(/(\d{1,2}):(\d{2})/); if (!m) return -1;
@@ -99,6 +81,7 @@ async function dbGet(wing) {
       SUPABASE_URL + '/rest/v1/schedules?wing=eq.' + wing + '&date=eq.' + todayStr() + '&select=activities',
       { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
     );
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = await r.json();
     if (d && d.length > 0 && d[0].activities) return JSON.parse(d[0].activities);
   } catch(e) { console.log('dbGet error:', e); }
@@ -107,11 +90,11 @@ async function dbGet(wing) {
 
 async function dbSet(wing, activities) {
   const payload = { wing, date: todayStr(), activities: JSON.stringify(activities) };
-  // Check if record exists
   const checkR = await fetch(
     SUPABASE_URL + '/rest/v1/schedules?wing=eq.' + wing + '&date=eq.' + todayStr(),
     { headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY } }
   );
+  if (!checkR.ok) throw new Error('Check failed: ' + checkR.status);
   const existing = await checkR.json();
   if (existing && existing.length > 0) {
     const r = await fetch(
@@ -181,8 +164,7 @@ function renderEvents(events) {
     if (upcoming && !up) { html += '<div class="slabel" style="grid-column:1/-1;">Upcoming</div>'; up=true; }
     html += `<div class="ecard ${curr?'now':''} ${past?'past':''}">
       ${curr?'<div class="nbadge">Now</div>':''}
-      <div class="etime">${fmtTime(t)}</div>
-      <div class="ename">${n}</div>
+      <div class="etime">${fmtTime(t)}</div><div class="ename">${n}</div>
       ${l?`<div class="eloc">📍 ${l}</div>`:''}
     </div>`;
   });
@@ -206,6 +188,4 @@ setInterval(() => { const s=Math.max(0,Math.round((nc-Date.now())/1000)); docume
 updateClock(); setInterval(updateClock, 10000);
 loadToday(); setInterval(() => { loadToday(); nc = Date.now()+30000; }, 30000);
 fetchWeather(); setInterval(fetchWeather, 30*60*1000);
-</script>
-</body>
-</html>
+</script></body></html>
